@@ -62,8 +62,17 @@ class _SwigNonDynamicMeta(type):
 
 
 
-def set_sut_data(*args):
-    return _simulator_module.set_sut_data(*args)
+def set_sut_data_float(tag, value):
+    return _simulator_module.set_sut_data_float(tag, value)
+
+def set_sut_data_int32(tag, value):
+    return _simulator_module.set_sut_data_int32(tag, value)
+
+def set_sut_data_uint32(tag, value):
+    return _simulator_module.set_sut_data_uint32(tag, value)
+
+def set_sut_data_bool(tag, value):
+    return _simulator_module.set_sut_data_bool(tag, value)
 
 def get_sut_data_float(tag):
     return _simulator_module.get_sut_data_float(tag)

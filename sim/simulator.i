@@ -2,8 +2,6 @@
 
 %{
 #include "simulator_binding.h"
-#include <stdint.h>
-#include <stdbool.h>
 %}
 
 // Typemaps to automatically handle Python type conversion
@@ -58,19 +56,19 @@
 
 // Expose Pythonic overloaded versions of setSutData and getSutData
 %inline %{
-    void set_sut_data(const char* tag, float value) {
+    void set_sut_data_float(const char* tag, float value) {
         setSutDataFloat(tag, value);
     }
 
-    void set_sut_data(const char* tag, int32_t value) {
+    void set_sut_data_int32(const char* tag, int32_t value) {
         setSutDataInt32(tag, value);
     }
 
-    void set_sut_data(const char* tag, uint32_t value) {
+    void set_sut_data_uint32(const char* tag, uint32_t value) {
         setSutDataUInt32(tag, value);
     }
 
-    void set_sut_data(const char* tag, bool value) {
+    void set_sut_data_bool(const char* tag, bool value) {
         setSutDataBool(tag, value);
     }
 

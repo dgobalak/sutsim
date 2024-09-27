@@ -1,6 +1,8 @@
 // #include "simulator_binding.h"
 
 #include <stdio.h>
+#include <stdint.h>
+#include <stdbool.h>
 
 void init_hook() {
     // printf("Firmware initialized.\n");
