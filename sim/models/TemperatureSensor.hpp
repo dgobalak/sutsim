@@ -6,14 +6,14 @@
 
 class TemperatureSensor : public PeripheralInterface {
 public:
-    TemperatureSensor() : temperature(0.0f), overTemperatureThreshold(0) {}
+    TemperatureSensor() : temperature(0.0f), overTemperatureThreshold(0.0) {}
 
     void setDataByTag(const std::string& element, const void* data, uint32_t size) override {
         if (element == "temperature" && size == sizeof(float)) {
             std::memcpy(&temperature, data, sizeof(float));
         } 
-        else if (element == "overTemperatureThreshold" && size == sizeof(uint32_t)) {
-            std::memcpy(&overTemperatureThreshold, data, sizeof(uint32_t));
+        else if (element == "overTemperatureThreshold" && size == sizeof(float)) {
+            std::memcpy(&overTemperatureThreshold, data, sizeof(float));
         } 
         else {
             throw std::invalid_argument("Invalid data element or size for temperature sensor");
@@ -24,8 +24,8 @@ public:
         if (element == "temperature" && size == sizeof(float)) {
             std::memcpy(buffer, &temperature, sizeof(float));
         }
-        else if (element == "overTemperatureThreshold" && size == sizeof(uint32_t)) {
-            std::memcpy(buffer, &overTemperatureThreshold, sizeof(uint32_t));
+        else if (element == "overTemperatureThreshold" && size == sizeof(float)) {
+            std::memcpy(buffer, &overTemperatureThreshold, sizeof(float));
         } 
         else {
             throw std::invalid_argument("Invalid data element or size for temperature sensor");
@@ -34,5 +34,5 @@ public:
 
 private:
     float    temperature;
-    uint32_t overTemperatureThreshold;
+    float    overTemperatureThreshold;
 };

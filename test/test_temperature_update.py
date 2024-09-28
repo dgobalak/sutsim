@@ -20,6 +20,6 @@ def test_data_types():
         # Get the temperature
         assert simulator.getSutDataFloat("device.temperature_sensor.temperature") == temp
 
-    simulator.setSutDataUInt32("device.temperature_sensor.overTemperatureThreshold", 1)
+    simulator.setSutDataFloat("device.temperature_sensor.overTemperatureThreshold", 100.0)
     simulator.runTick()
-    assert simulator.getSutDataUInt32("device.temperature_sensor.overTemperatureThreshold") == 1
+    assert simulator.getSutDataFloat("device.temperature_sensor.overTemperatureThreshold") == 100.0
