@@ -1,0 +1,55 @@
+name: Run Simulation Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  sil:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up Python environment
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+
+      # Install dependencies
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest swig
+
+      # Install CMake and build tools
+      - name: Install CMake and build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install cmake gcc g++ python3-dev -y
+
+      # Configure the project
+      - name: Configure project with CMake
+        run: |
+          mkdir build
+          cd build
+          cmake ..
+
+      # Build the project
+      - name: Build the project
+        run: |
+          cd build
+          make
+
+      # Run the tests
+      - name: Run simulation tests
+        run: |
+          cd test
+          run_tests.sh
