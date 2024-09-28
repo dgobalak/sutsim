@@ -6,7 +6,7 @@
 
 class TemperatureSensor : public PeripheralInterface {
 public:
-    TemperatureSensor() : status_flags(0), temperature(0.0f), overTemperatureThreshold(0) {}
+    TemperatureSensor() : temperature(0.0f), overTemperatureThreshold(0) {}
 
     void setDataByTag(const std::string& element, const void* data, uint32_t size) override {
         if (element == "temperature" && size == sizeof(float)) {
@@ -32,16 +32,7 @@ public:
         }
     }
 
-    void setStatusFlags(uint32_t flags) override {
-        status_flags = flags;
-    }
-
-    uint32_t getStatusFlags() const override {
-        return status_flags;
-    }
-
 private:
     float    temperature;
     uint32_t overTemperatureThreshold;
-    uint32_t status_flags;
 };

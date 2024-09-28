@@ -33,6 +33,10 @@
 
 *build/
 
+sim_artifacts/
+
 *.vscode/
 __pycache__/
 .pytest_cache/
+
+run_tests.sh

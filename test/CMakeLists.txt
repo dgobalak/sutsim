@@ -1,12 +1,12 @@
 # Set the path to the sim_artifacts directory (where the SWIG Python module is generated)
 set(SIM_ARTIFACTS_DIR "${CMAKE_BINARY_DIR}/../test/sim_artifacts")
 
-# Generate the run_tests.sh script
+# Generate the run_tests.sh script to run tests with the correct PYTHONPATH
 file(WRITE ${CMAKE_BINARY_DIR}/../test/run_tests.sh
 "#!/bin/bash\n"
 "# Auto-generated script to run tests with correct PYTHONPATH\n"
 "export PYTHONPATH=${SIM_ARTIFACTS_DIR}:\$PYTHONPATH\n"
-"pytest\n"
+"python -m pytest\n"
 "if [ \$? -eq 0 ]; then\n"
 "    echo 'All tests passed!'\n"
 "else\n"

@@ -1,28 +1,18 @@
-#include "simulator_binding.h"
+#include "py_binding.h"
 #include "Simulator.hpp"
 #include <cstring>  // For strcmp
 #include <stdexcept>
 
-Simulator simulator;  // Define simulator instance here, only once.
+static Simulator simulator;  // Define simulator instance here, only once.
 
-void initSimulator(const char* lib_path) {
-    simulator.init(std::string(lib_path));
+void initSim(const char* sut_name, const char* lib_path) {
+    simulator.init_sut(std::string(sut_name), std::string(lib_path));
 }
 
 void runTick() {
-    simulator.runTick();
+    simulator.tick_sut();
 }
 
-// void set_sut_data(const char* tag, const void* data, uint32_t size) {
-//     simulator.getSutState().setData(std::string(tag), data, size);
-// }
-
-// void get_sut_data(const char* tag, void* buffer, uint32_t size) {
-//     simulator.getSutState().getData(std::string(tag), buffer, size);
-// }
-
-
-// Python wrappers
 void setSutDataFloat(const char* tag, float value) {
     simulator.setSutData(std::string(tag), &value, "float");
 }

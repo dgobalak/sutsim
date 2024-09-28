@@ -1,4 +1,4 @@
-import simulator
+import sutsim as simulator
 import pytest
 import os
 
@@ -7,15 +7,19 @@ def test_data_types():
     firmware_lib_path = os.path.join(os.path.dirname(__file__), 'sim_artifacts', 'libfirmware.so')
 
     # Initialize the simulator
-    simulator.init_simulator(firmware_lib_path)
+    simulator.initSim("device", firmware_lib_path)
 
-    # Set different types of values (no type strings needed)
-    simulator.set_sut_data_float("temperature_sensor.temperature", 25.5)  # float
-    simulator.set_sut_data_uint32("temperature_sensor.overTemperatureThreshold", 1)
+    temperatures = [25.5, 26.5, 27.5, 28.5, 29.5]
+    for temp in temperatures:
+        # Set the temperature
+        simulator.setSutDataFloat("device.temperature_sensor.temperature", temp)
 
-    # Run the firmware tick
-    simulator.run_tick()
+        # Run the firmware tick
+        simulator.runTick()
 
-    # Get and assert values (automatically detects type)
-    assert simulator.get_sut_data_float("temperature_sensor.temperature") == 25.5
-    assert simulator.get_sut_data_uint32("temperature_sensor.overTemperatureThreshold") == 1
+        # Get the temperature
+        assert simulator.getSutDataFloat("device.temperature_sensor.temperature") == temp
+
+    simulator.setSutDataUInt32("device.temperature_sensor.overTemperatureThreshold", 1)
+    simulator.runTick()
+    assert simulator.getSutDataUInt32("device.temperature_sensor.overTemperatureThreshold") == 1
