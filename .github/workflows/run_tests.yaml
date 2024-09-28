@@ -52,4 +52,4 @@ jobs:
       - name: Run simulation tests
         run: |
           cd test
-          run_tests.sh
+          sh run_tests.sh
