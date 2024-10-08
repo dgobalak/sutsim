@@ -65,6 +65,8 @@ void Simulator::setSutData(const std::string& tag, const void* value, const std:
     if (sut_contexts[sut_name].sutsim_write == nullptr) {
         throw std::invalid_argument("SUT does not support set data");
     }
+
+    // TODO: Throw exception if tag not found
     
     if (type == "float") {
         sut_contexts[sut_name].sutsim_write(sut_tag.c_str(), value, sizeof(float));
@@ -91,6 +93,8 @@ void Simulator::getSutData(const std::string& tag, void* value, const std::strin
         throw std::invalid_argument("SUT does not support get data");
     }
     
+    // TODO: Throw exception if the tag does not exist
+
     if (type == "float") {
         sut_contexts[sut_name].sutsim_read(sut_tag.c_str(), value, sizeof(float));
     } else if (type == "int32") {

@@ -15,4 +15,4 @@ def test_data_types():
         simulator.runTick()
 
     # # Get the temperature
-    # assert simulator.getSutDataFloat("device.temperature_sensor.temperature") == 100.0
+    assert simulator.getSutDataFloat("device.temperature_sensor.temperature") == 100.0

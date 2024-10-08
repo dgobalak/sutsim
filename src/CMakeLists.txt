@@ -1,12 +1,18 @@
 # Build the firmware as a shared library for dynamic loading
 
-add_library(firmware SHARED firmware.c)
+set(SOURCES
+    firmware.c
+    rtos_app_hooks.c
+    temperature_sensor.c
+)
 
-target_include_directories(firmware PRIVATE
+set(INCLUDE_DIRS
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-# Link firmware with its dependencies (firmware_conn and models)
+add_library(firmware SHARED ${SOURCES})
+target_include_directories(firmware PRIVATE ${INCLUDE_DIRS})
+
 target_link_libraries(firmware
     freertos_with_port
     sutsim
