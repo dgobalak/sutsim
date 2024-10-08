@@ -17,8 +17,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          submodules: recursive  # Fetch all submodules
-          fetch-depth: 0         # Ensure full history is fetched
+          submodules: recursive        # Ensure all submodules are fetched
+          fetch-depth: 0               # Fetch full history for submodules
+          token: ${{ secrets.GITHUB_TOKEN }}  # Use GitHub token for authentication
 
       # Set up Python environment
       - name: Set up Python
