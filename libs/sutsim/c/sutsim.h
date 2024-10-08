@@ -13,7 +13,10 @@ typedef enum {
 
 typedef void (*sutsim_TagCallback)(const char* tag, const void* data, uint32_t size);
 
-typedef struct {
+// forward declaration
+typedef struct sutsim_tagEntry sutsim_tagEntry_S;
+
+typedef struct sutsim_tagEntry {
     uint32_t id;  // Unique identifier for each tag
     const char* tag;
     void* data;  // Pointer to the user-provided data buffer
@@ -33,6 +36,8 @@ typedef struct {
 
 // Initialize the simulator
 void sutsim_init(void);
+
+void sutsim_tick(void);
 
 // Add a tag entry (user provides a pointer to the data buffer)
 int sutsim_add_tag(const char* tag, void* data, uint32_t size, sutsim_dataType_E type);

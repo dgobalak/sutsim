@@ -1,12 +1,15 @@
 # Build the firmware as a shared library for dynamic loading
+
 add_library(firmware SHARED firmware.c)
 
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+target_include_directories(firmware PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
 
 # Link firmware with its dependencies (firmware_conn and models)
 target_link_libraries(firmware
-    firmware_conn
-    models
+    freertos_with_port
+    sutsim
 )
 
 # Set output directory for firmware shared libraries (to test/sim_artifacts)

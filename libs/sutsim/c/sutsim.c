@@ -3,12 +3,22 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+extern void sut_init_hook(void);
+extern void sut_tick_hook(void);
+
 static sutsim_tagList_S tag_list = {0};
 
 void sutsim_init(void) {
     tag_list.head = NULL;
     tag_list.count = 0;
     tag_list.initialized = true;
+
+    sut_init_hook();
+}
+
+void sutsim_tick(void) {
+    // TODO: Check that the simulator is initialized
+    sut_tick_hook();
 }
 
 int sutsim_add_tag(const char* tag, void* data, uint32_t size, sutsim_dataType_E type) {

@@ -5,17 +5,18 @@
 
 class SutContext {
 public:
-    SutContext() : lib_handle(nullptr), run_tick(nullptr), init_sut(nullptr), set_sut_data(nullptr), get_sut_data(nullptr) {}
+    SutContext() : lib_handle(nullptr), sutsim_init(nullptr), sutsim_tick(nullptr), sutsim_subscribe_to_tag(nullptr), sutsim_write(nullptr), sutsim_read(nullptr) {}
     ~SutContext() = default;
     
     std::string sut_name;
     std::string sut_path;
 
     void* lib_handle;
-    void (*run_tick)();
-    void (*init_sut)();
-    void (*set_sut_data)(const char*, const void*, uint32_t);
-    void (*get_sut_data)(const char*, void*, uint32_t);
+    void (*sutsim_init)(void);
+    void (*sutsim_tick)(void);
+    void (*sutsim_subscribe_to_tag)(const char*, void*);
+    bool (*sutsim_write)(const char*, const void*, uint32_t);
+    bool (*sutsim_read)(const char*, void*, uint32_t);
 
     bool initialized = false;
 };

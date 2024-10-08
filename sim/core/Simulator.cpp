@@ -28,17 +28,18 @@ void Simulator::init_sut(const std::string& sut_name, const std::string& lib_pat
     }
 
     // // Load the required symbols from the SUT library
-    context.init_sut = reinterpret_cast<void (*)()>(dlsym(context.lib_handle, "sut_init"));
-    context.run_tick = reinterpret_cast<void (*)()>(dlsym(context.lib_handle, "sut_tick"));
-    context.set_sut_data = reinterpret_cast<void (*)(const char*, const void*, uint32_t)>(dlsym(context.lib_handle, "sut_set_data"));
-    context.get_sut_data = reinterpret_cast<void (*)(const char*, void*, uint32_t)>(dlsym(context.lib_handle, "sut_get_data"));
+    context.sutsim_init = reinterpret_cast<void (*)()>(dlsym(context.lib_handle, "sutsim_init"));
+    context.sutsim_tick = reinterpret_cast<void (*)()>(dlsym(context.lib_handle, "sutsim_tick"));
+    context.sutsim_read = reinterpret_cast<bool (*)(const char*, void*, uint32_t)>(dlsym(context.lib_handle, "sutsim_read"));
+    context.sutsim_write = reinterpret_cast<bool (*)(const char*, const void*, uint32_t)>(dlsym(context.lib_handle, "sutsim_write"));
+    context.sutsim_subscribe_to_tag = reinterpret_cast<void (*)(const char*, void*)>(dlsym(context.lib_handle, "sutsim_subscribe_to_tag"));
 
-    if (!context.init_sut) {
+    if (!context.sutsim_init || !context.sutsim_tick || !context.sutsim_read || !context.sutsim_write || !context.sutsim_subscribe_to_tag) {
         throw std::runtime_error("Failed to load required symbols from SUT library.");
     }
 
     // // Initialize the SUT
-    context.init_sut();
+    context.sutsim_init();
     context.initialized = true;
     
     // // Store the SUT context
@@ -48,7 +49,7 @@ void Simulator::init_sut(const std::string& sut_name, const std::string& lib_pat
 void Simulator::tick_sut() {
     for (auto& context : sut_contexts) {
         if (context.second.initialized) {
-            context.second.run_tick();
+            context.second.sutsim_tick();
         }
     }
 }
@@ -61,18 +62,18 @@ void Simulator::setSutData(const std::string& tag, const void* value, const std:
         throw std::invalid_argument("SUT not found");
     }
 
-    if (sut_contexts[sut_name].set_sut_data == nullptr) {
+    if (sut_contexts[sut_name].sutsim_write == nullptr) {
         throw std::invalid_argument("SUT does not support set data");
     }
     
     if (type == "float") {
-        sut_contexts[sut_name].set_sut_data(sut_tag.c_str(), value, sizeof(float));
+        sut_contexts[sut_name].sutsim_write(sut_tag.c_str(), value, sizeof(float));
     } else if (type == "int32") {
-        sut_contexts[sut_name].set_sut_data(sut_tag.c_str(), value, sizeof(int32_t));
+        sut_contexts[sut_name].sutsim_write(sut_tag.c_str(), value, sizeof(int32_t));
     } else if (type == "uint32") {
-        sut_contexts[sut_name].set_sut_data(sut_tag.c_str(), value, sizeof(uint32_t));
+        sut_contexts[sut_name].sutsim_write(sut_tag.c_str(), value, sizeof(uint32_t));
     } else if (type == "bool") {
-        sut_contexts[sut_name].set_sut_data(sut_tag.c_str(), value, sizeof(bool));
+        sut_contexts[sut_name].sutsim_write(sut_tag.c_str(), value, sizeof(bool));
     } else {
         throw std::invalid_argument("Unsupported type");
     }
@@ -86,18 +87,18 @@ void Simulator::getSutData(const std::string& tag, void* value, const std::strin
         throw std::invalid_argument("SUT not found");
     }
 
-    if (sut_contexts[sut_name].get_sut_data == nullptr) {
+    if (sut_contexts[sut_name].sutsim_read == nullptr) {
         throw std::invalid_argument("SUT does not support get data");
     }
     
     if (type == "float") {
-        sut_contexts[sut_name].get_sut_data(sut_tag.c_str(), value, sizeof(float));
+        sut_contexts[sut_name].sutsim_read(sut_tag.c_str(), value, sizeof(float));
     } else if (type == "int32") {
-        sut_contexts[sut_name].get_sut_data(sut_tag.c_str(), value, sizeof(int32_t));
+        sut_contexts[sut_name].sutsim_read(sut_tag.c_str(), value, sizeof(int32_t));
     } else if (type == "uint32") {
-        sut_contexts[sut_name].get_sut_data(sut_tag.c_str(), value, sizeof(uint32_t));
+        sut_contexts[sut_name].sutsim_read(sut_tag.c_str(), value, sizeof(uint32_t));
     } else if (type == "bool") {
-        sut_contexts[sut_name].get_sut_data(sut_tag.c_str(), value, sizeof(bool));
+        sut_contexts[sut_name].sutsim_read(sut_tag.c_str(), value, sizeof(bool));
     } else {
         throw std::invalid_argument("Unsupported type");
     }

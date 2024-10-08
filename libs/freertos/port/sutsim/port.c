@@ -1,25 +1,77 @@
-#include "portmacro.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
-// No-op function for task yield
-void vPortYield(void) {
-    // No-op
+BaseType_t xPortStartScheduler( void )
+{
+    return pdTRUE;
 }
 
-// Critical section management (for single-threaded simulation)
-void vTaskEnterCritical(void) {
-    portENTER_CRITICAL();
+void vPortEndScheduler( void )
+{
 }
 
-void vTaskExitCritical(void) {
-    portEXIT_CRITICAL();
+StackType_t * pxPortInitialiseStack( StackType_t * pxTopOfStack,
+                                     TaskFunction_t pxCode,
+                                     void * pvParameters )
+{
+    ( void ) pxTopOfStack;
+    ( void ) pvParameters;
+    ( void ) * pxCode;
+
+    return NULL;
 }
 
-// Scheduler startup (this will never actually run tasks)
-BaseType_t xPortStartScheduler(void) {
-    // Scheduler doesn't run in simulation, just return
-    return 0;
+void vPortYield( void )
+{
+    /* Save the current Context */
+
+    /* Switch to the highest priority task that is ready to run. */
+    #if ( configNUMBER_OF_CORES == 1 )
+    {
+        vTaskSwitchContext();
+    }
+    #else
+    {
+        vTaskSwitchContext( portGET_CORE_ID() );
+    }
+    #endif
+
+    /* Start executing the task we have just switched to. */
 }
 
-void vPortEndScheduler(void) {
-    // No-op
+static void prvTickISR( void )
+{
+    /* Interrupts must have been enabled for the ISR to fire, so we have to
+     * save the context with interrupts enabled. */
+
+    #if ( configNUMBER_OF_CORES == 1 )
+    {
+        /* Maintain the tick count. */
+        if( xTaskIncrementTick() != pdFALSE )
+        {
+            /* Switch to the highest priority task that is ready to run. */
+            vTaskSwitchContext();
+        }
+    }
+    #else
+    {
+        UBaseType_t ulPreviousMask;
+
+        /* Tasks or ISRs running on other cores may still in critical section in
+         * multiple cores environment. Incrementing tick needs to performed in
+         * critical section. */
+        ulPreviousMask = taskENTER_CRITICAL_FROM_ISR();
+
+        /* Maintain the tick count. */
+        if( xTaskIncrementTick() != pdFALSE )
+        {
+            /* Switch to the highest priority task that is ready to run. */
+            vTaskSwitchContext( portGET_CORE_ID() );
+        }
+
+        taskEXIT_CRITICAL_FROM_ISR( ulPreviousMask );
+    }
+    #endif /* if ( configNUMBER_OF_CORES == 1 ) */
+
+    /* start executing the new task */
 }
