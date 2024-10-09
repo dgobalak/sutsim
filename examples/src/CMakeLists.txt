@@ -20,5 +20,5 @@ target_link_libraries(firmware
 
 # Set output directory for firmware shared libraries (to test/sim_artifacts)
 set_target_properties(firmware PROPERTIES
-    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../test/sim_artifacts
+    LIBRARY_OUTPUT_DIRECTORY ${SUTSIM_TEST_DIR}/sim_artifacts
 )
