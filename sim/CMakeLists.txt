@@ -1,5 +1,3 @@
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/../test/sim_artifacts)
-
 # Set policies to resolve warnings
 cmake_policy(SET CMP0078 NEW)
 cmake_policy(SET CMP0086 NEW)
@@ -48,12 +46,36 @@ swig_link_libraries(py_simulator
     py_binding
 )
 
+file(MAKE_DIRECTORY ${SUTSIM_TEST_DIR}/sim_artifacts)
+
 set_target_properties(py_simulator PROPERTIES
-    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../test/sim_artifacts
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/../test/sim_artifacts
+    LIBRARY_OUTPUT_DIRECTORY ${SUTSIM_TEST_DIR}/sim_artifacts
+    RUNTIME_OUTPUT_DIRECTORY ${SUTSIM_TEST_DIR}/sim_artifacts
 )
 
 add_custom_command(TARGET py_simulator POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
-    ${CMAKE_CURRENT_BINARY_DIR}/sutsim.py ${CMAKE_BINARY_DIR}/../test/sim_artifacts/
+    ${CMAKE_CURRENT_BINARY_DIR}/sutsim.py ${SUTSIM_TEST_DIR}/sim_artifacts/
 )
+
+# Set the path to the sim_artifacts directory (where the SWIG Python module is generated)
+set(SIM_ARTIFACTS_DIR "${SUTSIM_TEST_DIR}/sim_artifacts")
+
+# Generate the run_tests.sh script to run tests with the correct PYTHONPATH
+file(WRITE ${SUTSIM_TEST_DIR}/run_tests.sh
+"#!/bin/bash\n"
+"# Auto-generated script to run tests with correct PYTHONPATH\n"
+"export PYTHONPATH=${SIM_ARTIFACTS_DIR}:\$PYTHONPATH\n"
+"CMD_WRAPPER=\$\{CMD_WRAPPER\:-\}\n"
+"$CMD_WRAPPER python -m pytest\n"
+"if [ \$? -eq 0 ]; then\n"
+"    echo 'All tests passed!'\n"
+"else\n"
+"    echo 'Some tests failed. Check the output above for details.'\n"
+"fi\n"
+)
+
+# Make the run_tests.sh script executable
+file(COPY ${SUTSIM_TEST_DIR}/run_tests.sh
+     DESTINATION ${SUTSIM_TEST_DIR}
+     FILE_PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)

@@ -8,17 +8,18 @@ SUTSim is a simulation environment for firmware that integrates well with Python
 The directory structure of the project is as follows:
 
 ```
+/examples
+    /src
+    /test
+        /sim_artifacts
+        run_tests.sh
+        test_temperature_sensor.py
 /libs
     /freertos
     /sutsim
 /sim
     /core
     /py
-/src
-/test
-    /sim_artifacts
-    run_tests.sh
-    test_temperature_sensor.py
 ```
 
 ## Setup Instructions
