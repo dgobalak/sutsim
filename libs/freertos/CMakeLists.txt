@@ -4,6 +4,7 @@ add_library(freertos_config INTERFACE)
 # Include the FreeRTOS headers through this interface
 target_include_directories(freertos_config SYSTEM INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/port/sutsim
+    ${SUTSIM_FIRMWARE_FREERTOS_CONFIG_PATH}
 )
 
 # Add configuration macros for FreeRTOS (e.g., disabling coverage test)
