@@ -27,14 +27,18 @@ void rtos_app_init(void) {
     (void)temperature_sensor_init();
 }
 
-void taskFunction_1kHz(void) {
+void taskFunction_readTemperature_periodic(void) {
     float t = 0.0f;
     if (temperature_sensor_readCelsius(&t) == TEMPERATURE_SENSOR_SUCCESS) {
         (void)xQueueSend(rtos_app_data.queue, &t, 0);
     }
 }
 
-void taskFunction_100Hz(void) {
+bool taskFunction_handleTemperature_eventCheck(void) {
+    return uxQueueMessagesWaiting(rtos_app_data.queue) > 0;
+}
+
+void taskFunction_handleTemperature_eventRun(void) {
     float t = 0.0f;
     (void)xQueueReceive(rtos_app_data.queue, &t, 0);
     printf("Firmware: Current temperature is %.2f°C\n", t);

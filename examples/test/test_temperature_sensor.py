@@ -11,7 +11,7 @@ def test_data_types():
 
     simulator.setSutDataFloat("device.temperature_sensor.temperature", 100.0)
 
-    for _ in range(20):
+    for _ in range(5):
         simulator.runTick()
 
     # # Get the temperature

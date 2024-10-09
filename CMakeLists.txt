@@ -14,6 +14,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 add_subdirectory(sim)
 add_subdirectory(libs/freertos)
 add_subdirectory(libs/sutsim/c)
+add_subdirectory(libs/task_config)
 
 foreach(FIRMWARE_DIR ${SUTSIM_FIRMWARE_DIRS})
     add_subdirectory(${FIRMWARE_DIR})

@@ -4,6 +4,7 @@ set(SOURCES
     firmware.c
     rtos_app_hooks.c
     temperature_sensor.c
+    app_tasks.c
 )
 
 set(INCLUDE_DIRS
@@ -16,6 +17,7 @@ target_include_directories(firmware PRIVATE ${INCLUDE_DIRS})
 target_link_libraries(firmware
     freertos_with_port
     sutsim
+    task_config
 )
 
 # Set output directory for firmware shared libraries (to test/sim_artifacts)
