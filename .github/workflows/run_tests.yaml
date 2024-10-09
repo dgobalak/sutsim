@@ -42,14 +42,14 @@ jobs:
       # Configure the project
       - name: Configure project with CMake
         run: |
-          mkdir build
-          cd build
+          mkdir examples/build
+          cd examples/build
           cmake ..
 
       # Build the project
       - name: Build the project
         run: |
-          cd build
+          cd examples/build
           make
 
       # Run the tests
