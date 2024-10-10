@@ -46,11 +46,11 @@ void Simulator::init_sut(const std::string& sut_name, const std::string& lib_pat
         throw std::runtime_error("Failed to load required symbols from SUT library.");
     }
 
-    // // Initialize the SUT
+    // Initialize the SUT
     context.sutsim_init();
     context.initialized = true;
     
-    // // Store the SUT context
+    // Store the SUT context
     sut_contexts[sut_name] = context;
 }
 

@@ -24,18 +24,21 @@ static app_temperatures_S app_temperatures = {0};
 // Init function to be called before tasks are created
 void app_temperature_init(void) {
     app_temperatures.temperature_queue = xQueueCreateStatic(APP_TEMPERATURES_QUEUE_LENGTH, APP_TEMPERATURES_QUEUE_ITEM_SIZE, app_temperatures.temperature_queueStorageArea, &app_temperatures.temperature_queueBuffer);
+
+    (void)temperature_sensor_init(); // Creates the tags for the temperature sensor
 }
 
 // Temperature reading task (periodic)
-void taskFunction_readTemperature_init_100Hz(void) {
-    (void)temperature_sensor_init();
-}
+void taskFunction_readTemperature_init_100Hz(void) {}
 
 void taskFunction_readTemperature_run_100Hz(void) {
     float t = 0.0f;
     if (temperature_sensor_readCelsius(&t) == TEMPERATURE_SENSOR_SUCCESS) {
         (void)xQueueSend(app_temperatures.temperature_queue, &t, 0);
     }
+
+    uint8_t status = temperature_sensor_readStatus();
+    printf("Firmware: Temperature sensor status register is 0x%02X\n", status);
 }
 
 // Temperature processing task (event-driven)

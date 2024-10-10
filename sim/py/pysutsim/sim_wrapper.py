@@ -17,6 +17,7 @@ class SimWrapper:
             raise KeyError(f"Device '{device_name}' not found.")
         return SimDevice(device_name)
 
+
 class SimDevice:
     def __init__(self, device_name):
         self.device_name = device_name
@@ -28,3 +29,10 @@ class SimDevice:
     def __setitem__(self, tag, value):
         full_key = f"{self.device_name}.{tag}"
         sutsim.setSutData(full_key, value)
+
+    def run_once(self):
+        sutsim.runTick()
+    
+    def run_for(self, num_ticks):
+        for _ in range(num_ticks):
+            self.run_once()

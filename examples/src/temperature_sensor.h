@@ -21,3 +21,9 @@ temperature_sensor_status_E temperature_sensor_init(void);
  * @return temperature_sensor_status_E The status of the operation
  */
 temperature_sensor_status_E temperature_sensor_readCelsius(float* temperature);
+
+/**
+ * @brief Read status register of the temperature sensor
+ * 
+ */
+uint8_t temperature_sensor_readStatus(void);
