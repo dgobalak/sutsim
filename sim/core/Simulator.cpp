@@ -32,7 +32,7 @@ void Simulator::init_sut(const std::string& sut_name, const std::string& lib_pat
     context.sutsim_tick = reinterpret_cast<void (*)()>(dlsym(context.lib_handle, "sutsim_tick"));
     context.sutsim_read = reinterpret_cast<bool (*)(const char*, void*, uint32_t)>(dlsym(context.lib_handle, "sutsim_read"));
     context.sutsim_write = reinterpret_cast<bool (*)(const char*, const void*, uint32_t)>(dlsym(context.lib_handle, "sutsim_write"));
-    context.sutsim_subscribe_to_tag = reinterpret_cast<void (*)(const char*, void*)>(dlsym(context.lib_handle, "sutsim_subscribe_to_tag"));
+    context.sutsim_subscribe_to_tag = reinterpret_cast<bool (*)(const char*, void*)>(dlsym(context.lib_handle, "sutsim_subscribe_to_tag"));
 
     if (!context.sutsim_init || !context.sutsim_tick || !context.sutsim_read || !context.sutsim_write || !context.sutsim_subscribe_to_tag) {
         throw std::runtime_error("Failed to load required symbols from SUT library.");
