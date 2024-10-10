@@ -53,7 +53,7 @@ bool sutsim_write(const char* tag, const void* data, uint32_t size);
 bool sutsim_read(const char* tag, void* buffer, uint32_t size);
 
 // Get the data type of a tag
-uint8_t sutsim_get_tag_type(const char* tag);
+int8_t sutsim_get_tag_type(const char* tag);
 
 // Clean up the tag list
 void sutsim_cleanup(void);

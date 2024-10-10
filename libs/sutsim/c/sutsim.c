@@ -118,13 +118,13 @@ void sutsim_cleanup(void) {
     tag_list.count = 0;
 }
 
-uint8_t sutsim_get_tag_type(const char* tag) {
+int8_t sutsim_get_tag_type(const char* tag) {
     sutsim_tagEntry_S* tagEntry = sutsim_find_tag(tag);
     if (tagEntry) {
-        return (uint8_t)tagEntry->type;
+        return (int8_t)tagEntry->type;
     }
 
-    return 0;  // Tag not found
+    return -1;  // Tag not found
 }
 
 static sutsim_tagEntry_S* sutsim_find_tag(const char* tag) {

@@ -17,7 +17,7 @@ public:
     bool (*sutsim_subscribe_to_tag)(const char*, void*);
     bool (*sutsim_write)(const char*, const void*, uint32_t);
     bool (*sutsim_read)(const char*, void*, uint32_t);
-    uint8_t (*sutsim_get_tag_type)(const char*);
+    int8_t (*sutsim_get_tag_type)(const char*);
 
     bool initialized = false;
 };
