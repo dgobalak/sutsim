@@ -41,6 +41,8 @@ void taskFunction_readTemperature_run_100Hz(void) {
 // Temperature processing task (event-driven)
 void taskFunction_processTemperature_eventDriven(void) {
     float t = 0.0f;
+
+    // Note: Non-zero block time does not work in sim
     if (xQueueReceive(app_temperatures.temperature_queue, &t, 0U) == pdTRUE) {
         printf("Firmware: Current temperature is %.2f°C\n", t);
     }
