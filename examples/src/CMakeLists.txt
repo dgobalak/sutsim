@@ -1,10 +1,10 @@
 # Build the firmware as a shared library for dynamic loading
 
 set(SOURCES
-    firmware.c
-    rtos_app_hooks.c
+    sutsim_hooks.c
+    app_task_config.c
+    app_temperature.c
     temperature_sensor.c
-    app_tasks.c
 )
 
 set(INCLUDE_DIRS
@@ -20,7 +20,7 @@ target_link_libraries(firmware
     task_config
 )
 
-# Set output directory for firmware shared libraries (to test/sim_artifacts)
+# Set output directory for firmware shared libraries
 set_target_properties(firmware PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY ${SUTSIM_TEST_DIR}/sim_artifacts
 )

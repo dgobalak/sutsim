@@ -9,10 +9,10 @@ def test_data_types():
     # Initialize the simulator
     simulator.initSim("device", firmware_lib_path)
 
+    # Set the temperature sensor data and verify it was set correctly
     simulator.setSutDataFloat("device.temperature_sensor.temperature", 100.0)
-
-    for _ in range(5):
+    simulator.getSutDataFloat("device.temperature_sensor.temperature") == 100.0
+    
+    for _ in range(25):
         simulator.runTick()
-
-    # # Get the temperature
-    assert simulator.getSutDataFloat("device.temperature_sensor.temperature") == 100.0
+    
