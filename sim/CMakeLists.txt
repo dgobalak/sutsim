@@ -79,3 +79,13 @@ file(WRITE ${SUTSIM_TEST_DIR}/run_tests.sh
 file(COPY ${SUTSIM_TEST_DIR}/run_tests.sh
      DESTINATION ${SUTSIM_TEST_DIR}
      FILE_PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+
+file(GLOB_RECURSE PY_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} py/pysutsim/*.py)
+
+foreach(PY_FILE ${PY_FILES})
+    # Get the file name without the directory structure
+    get_filename_component(FILE_NAME ${PY_FILE} NAME)
+
+    # Copy the file to the target directory without preserving the source directory structure
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${PY_FILE} ${SUTSIM_TEST_DIR}/sim_artifacts/${FILE_NAME} COPYONLY)
+endforeach()
