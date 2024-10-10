@@ -1,5 +1,7 @@
 #include "py_binding.h"
 #include "Simulator.hpp"
+
+#include <Python.h>
 #include <cstring>  // For strcmp
 #include <stdexcept>
 
@@ -51,4 +53,36 @@ bool getSutDataBool(const char* tag) {
     bool value;
     simulator.getSutData(std::string(tag), &value, "bool");
     return value;
+}
+
+void setSutData(const char* tag, PyObject* value) {
+    if (PyFloat_Check(value)) {
+        setSutDataFloat(tag, (float)PyFloat_AsDouble(value));
+    } else if (PyLong_Check(value)) {
+        long v = PyLong_AsLong(value);
+        if (v >= 0) {
+            setSutDataUInt32(tag, (uint32_t)v);
+        } else {
+            setSutDataInt32(tag, (int32_t)v);
+        }
+    } else if (PyBool_Check(value)) {
+        setSutDataBool(tag, PyObject_IsTrue(value));
+    } else {
+        PyErr_SetString(PyExc_TypeError, "Unsupported data type for setSutData");
+    }
+}
+
+PyObject* getSutData(const char* tag) {
+    if (simulator.getSutDataType(std::string(tag)) == "float") {
+        return PyFloat_FromDouble(getSutDataFloat(tag));
+    } else if (simulator.getSutDataType(std::string(tag)) == "int32") {
+        return PyLong_FromLong(getSutDataInt32(tag));
+    } else if (simulator.getSutDataType(std::string(tag)) == "uint32") {
+        return PyLong_FromUnsignedLong(getSutDataUInt32(tag));
+    } else if (simulator.getSutDataType(std::string(tag)) == "bool") {
+        return PyBool_FromLong(getSutDataBool(tag));
+    } else {
+        PyErr_SetString(PyExc_TypeError, "Unsupported data type for getSutData");
+        return NULL;
+    }
 }

@@ -5,7 +5,7 @@
 
 // Supported data types for tags
 typedef enum {
-    SUTSIM_INT32,
+    SUTSIM_INT32 = 0,
     SUTSIM_UINT32,
     SUTSIM_FLOAT,
     SUTSIM_BOOL
@@ -51,6 +51,9 @@ bool sutsim_write(const char* tag, const void* data, uint32_t size);
 
 // Read data from the tag
 bool sutsim_read(const char* tag, void* buffer, uint32_t size);
+
+// Get the data type of a tag
+uint8_t sutsim_get_tag_type(const char* tag);
 
 // Clean up the tag list
 void sutsim_cleanup(void);

@@ -2,6 +2,7 @@
 
 %{
 #include "py_binding.h"
+#include <Python.h>
 %}
 
 // Float handling
@@ -52,17 +53,7 @@
     $result = PyBool_FromLong($1);
 }
 
-// %import "py_binding.h"
-
 void initSim(const char* sut_name, const char* lib_path);
 void runTick();
-
-void setSutDataFloat(const char* tag, float value);
-void setSutDataInt32(const char* tag, int32_t value);
-void setSutDataUInt32(const char* tag, uint32_t value);
-void setSutDataBool(const char* tag, bool value);
-
-float    getSutDataFloat(const char* tag);
-int32_t  getSutDataInt32(const char* tag);
-uint32_t getSutDataUInt32(const char* tag);
-bool     getSutDataBool(const char* tag);
+void setSutData(const char* tag, PyObject* value);
+PyObject* getSutData(const char* tag);

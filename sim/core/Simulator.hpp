@@ -16,6 +16,8 @@ public:
     void setSutData(const std::string& tag, const void* value, const std::string& type);
     void getSutData(const std::string& tag, void* value, const std::string& type);
 
+    std::string getSutDataType(const std::string& tag);
+
 private:
     std::unordered_map<std::string, SutContext> sut_contexts;
 
