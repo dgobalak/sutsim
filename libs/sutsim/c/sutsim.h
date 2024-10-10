@@ -31,6 +31,7 @@ typedef struct sutsim_tagEntry {
 typedef struct {
     bool initialized;
     sutsim_tagEntry_S* head;
+    sutsim_tagEntry_S* tail;
     uint32_t count;
 } sutsim_tagList_S;
 
@@ -40,10 +41,10 @@ void sutsim_init(void);
 void sutsim_tick(void);
 
 // Add a tag entry (user provides a pointer to the data buffer)
-int sutsim_add_tag(const char* tag, void* data, uint32_t size, sutsim_dataType_E type);
+bool sutsim_add_tag(const char* tag, void* data, uint32_t size, sutsim_dataType_E type);
 
 // Subscribe to a tag (register a callback for tag updates)
-void sutsim_subscribe_to_tag(const char* tag, sutsim_TagCallback subscriber_cb);
+bool sutsim_subscribe_to_tag(const char* tag, sutsim_TagCallback subscriber_cb);
 
 // Write data to a tag
 bool sutsim_write(const char* tag, const void* data, uint32_t size);
