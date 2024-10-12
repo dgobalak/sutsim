@@ -1,4 +1,5 @@
 #include "temperature_sensor.h"
+#include "heater.h"
 
 #include "FreeRTOS.h"
 #include "queue.h"
@@ -9,6 +10,8 @@
 /* DEFINES */
 #define APP_TEMPERATURES_QUEUE_LENGTH    10
 #define APP_TEMPERATURES_QUEUE_ITEM_SIZE sizeof(float)
+
+#define APP_TEMPERATURES_UNDERTEMP_THRESHOLD 50.0f
 
 /* TYPEDEFS */
 typedef struct {
@@ -48,5 +51,11 @@ void taskFunction_processTemperature_eventDriven(void) {
     // Note: Non-zero block time does not work in sim
     if (xQueueReceive(app_temperatures.temperature_queue, &t, 0U) == pdTRUE) {
         printf("Firmware: Current temperature is %.2f°C\n", t);
+
+        if (t < APP_TEMPERATURES_UNDERTEMP_THRESHOLD) {
+            heater_enable();
+        } else {
+            heater_disable();
+        }
     }
 }

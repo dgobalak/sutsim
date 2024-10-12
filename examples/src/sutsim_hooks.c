@@ -8,11 +8,13 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-// Hooks defined by application
 extern void app_temperature_init(void);
+extern void pwm_init(void);
+extern void heater_init(void);
 
 void sut_init_hook(void) {
-    // Register all tags
+    pwm_init();
+    heater_init();
     app_temperature_init();
 }
 

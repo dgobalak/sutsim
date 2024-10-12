@@ -5,6 +5,8 @@ set(SOURCES
     app_task_config.c
     app_temperature.c
     temperature_sensor.c
+    pwm.c
+    heater.c
 )
 
 set(INCLUDE_DIRS
