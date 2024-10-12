@@ -12,16 +12,19 @@
 extern void app_temperature_init(void);
 
 void sut_init_hook(void) {
-    // Module initialization
+    // Register all tags
     app_temperature_init();
-    
-    // Task initialization
-    task_executeAllInit();
 }
 
 void sut_tick_hook(void) {
     // Assume tick rate is 1kHz
     static uint32_t tickCounter = 0;
+    static bool     initialized  = false;
+
+    if (!initialized) {
+        task_executeAllInit();
+        initialized = true;
+    }
 
     task_executeAll(tickCounter);
 

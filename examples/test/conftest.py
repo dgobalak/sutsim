@@ -1,11 +1,10 @@
-from sutsim_fixtures import suts
+from sutsim_fixtures import devices
 import pytest
 import os
 
 @pytest.fixture
 def device_map():
-    # Dictionary to map device names to their firmware paths
+    # Map simulated device instances to their shared object firmware paths
     return {
-        "device": os.path.join(os.path.dirname(__file__), 'sim_artifacts', 'libfirmware.so'),
-        # Add more devices and their respective firmware paths here if needed
+        "thermal_ecu": os.path.join(os.path.dirname(__file__), 'sim_artifacts', 'libfirmware.so'),
     }

@@ -63,27 +63,20 @@ This script sets up the environment variables needed for the tests and runs them
 
 ## Test Syntax
 
-Here's an example test case that uses the new test syntax:
+Here's an example test case:
 
 ```python
-import sutsim as simulator
 import pytest
-import os
 
-def test_data_types():
-    # Path to the firmware shared library
-    firmware_lib_path = os.path.join(os.path.dirname(__file__), 'sim_artifacts', 'libfirmware.so')
-
-    # Initialize the simulator
-    simulator.initSim("device", firmware_lib_path)
-
-    simulator.setSutDataFloat("device.temperature_sensor.temperature", 100.0)
-
-    for _ in range(20):
-        simulator.runTick()
-
-    # # Get the temperature
-    assert simulator.getSutDataFloat("device.temperature_sensor.temperature") == 100.0
+def test_temperature_sensor_reads(devices):    
+    devices["thermal_ecu"]["temperature_sensor.status"] = 1
+    assert devices["thermal_ecu"]["temperature_sensor.status"] == 1
+    
+    devices["thermal_ecu"]["temperature_sensor.temperature"] = 100.0
+    assert devices["thermal_ecu"]["temperature_sensor.temperature"] == 100.0
+    
+    devices.run_for(25)
+    
 ```
 
 ## Debugging with GDB
