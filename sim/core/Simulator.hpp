@@ -1,6 +1,8 @@
 #pragma once
 
 #include "SutContext.hpp"
+#include "StateTag.hpp"
+
 #include <unordered_map>
 #include <string>
 #include <memory>
@@ -13,13 +15,11 @@ public:
     void init_sut(const std::string& sut_name, const std::string& library_path);
     void tick_sut();
 
-    void setSutData(const std::string& tag, const void* value, const std::string& type);
-    void getSutData(const std::string& tag, void* value, const std::string& type);
+    void setSutData(const StateTag& tag, const void* value, const std::string& type);
+    void getSutData(const StateTag& tag, void* value, const std::string& type);
 
-    std::string getSutDataType(const std::string& tag);
+    std::string getSutDataType(const StateTag& tag);
 
 private:
     std::unordered_map<std::string, SutContext> sut_contexts;
-
-    std::pair<std::string, std::string> splitTag(const std::string& tag) const;
 };

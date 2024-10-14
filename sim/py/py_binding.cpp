@@ -1,11 +1,12 @@
 #include "py_binding.h"
 #include "Simulator.hpp"
+#include "StateTag.hpp"
 
 #include <Python.h>
 #include <cstring>  // For strcmp
 #include <stdexcept>
 
-static Simulator simulator;  // Define simulator instance here, only once.
+static Simulator simulator;
 
 void initSim(const char* sut_name, const char* lib_path) {
     simulator.init_sut(std::string(sut_name), std::string(lib_path));
@@ -16,42 +17,50 @@ void runTick() {
 }
 
 void setSutDataFloat(const char* tag, float value) {
-    simulator.setSutData(std::string(tag), &value, "float");
+    const StateTag state_tag{tag};
+    simulator.setSutData(state_tag, &value, "float");
 }
 
 void setSutDataInt32(const char* tag, int32_t value) {
-    simulator.setSutData(std::string(tag), &value, "int32");
+    const StateTag state_tag{tag};
+    simulator.setSutData(state_tag, &value, "int32");
 }
 
 void setSutDataUInt32(const char* tag, uint32_t value) {
-    simulator.setSutData(std::string(tag), &value, "uint32");
+    const StateTag state_tag{tag};
+    simulator.setSutData(state_tag, &value, "uint32");
 }
 
 void setSutDataBool(const char* tag, bool value) {
-    simulator.setSutData(std::string(tag), &value, "bool");
+    const StateTag state_tag{tag};
+    simulator.setSutData(state_tag, &value, "bool");
 }
 
 float getSutDataFloat(const char* tag) {
-    float value;
-    simulator.getSutData(std::string(tag), &value, "float");
+    float value = 0.0f;
+    StateTag state_tag{tag};
+    simulator.getSutData(state_tag, &value, "float");
     return value;
 }
 
 int32_t getSutDataInt32(const char* tag) {
-    int32_t value;
-    simulator.getSutData(std::string(tag), &value, "int32");
+    int32_t value = 0;
+    StateTag state_tag{tag};
+    simulator.getSutData(state_tag, &value, "int32");
     return value;
 }
 
 uint32_t getSutDataUInt32(const char* tag) {
-    uint32_t value;
-    simulator.getSutData(std::string(tag), &value, "uint32");
+    uint32_t value = 0;
+    StateTag state_tag{tag};
+    simulator.getSutData(state_tag, &value, "uint32");
     return value;
 }
 
 bool getSutDataBool(const char* tag) {
-    bool value;
-    simulator.getSutData(std::string(tag), &value, "bool");
+    bool value = false;
+    StateTag state_tag{tag};
+    simulator.getSutData(state_tag, &value, "bool");
     return value;
 }
 
