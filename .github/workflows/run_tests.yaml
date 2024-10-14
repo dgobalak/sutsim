@@ -42,18 +42,18 @@ jobs:
       # Configure the project
       - name: Configure project with CMake
         run: |
-          mkdir examples/build
-          cd examples/build
+          mkdir examples/basic_heater/build
+          cd examples/basic_heater/build
           cmake ..
 
       # Build the project
       - name: Build the project
         run: |
-          cd examples/build
+          cd examples/basic_heater/build
           make
 
       # Run the tests
       - name: Run simulation tests
         run: |
-          cd examples/test
+          cd examples/basic_heater/test
           sh run_tests.sh

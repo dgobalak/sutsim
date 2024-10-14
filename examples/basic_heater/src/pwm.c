@@ -13,7 +13,7 @@ typedef struct {
 static pwm_S pwm = {0};
 
 void pwm_init(void) {
-    sutsim_add_tag(PWM_CH1_TAG, &pwm.ch1_freq, sizeof(pwm.ch1_freq), SUTSIM_UINT32);
+    sutsim_add_tag(PWM_CH1_TAG, &pwm.ch1_freq, sizeof(pwm.ch1_freq), SUTSIM_UINT32, NULL, false);
 }
 
 void pwm_set_freq(uint32_t value) {

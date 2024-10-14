@@ -16,8 +16,8 @@ typedef struct {
 static sensor_data_S sensor_data = {0.0f};
 
 temperature_sensor_status_E temperature_sensor_init(void) {
-    sutsim_add_tag(TEMPERATURE_CELSIUS_TAG, &sensor_data.temperature, sizeof(float), SUTSIM_FLOAT);
-    sutsim_add_tag(TEMPERATURE_STATUS_TAG, &sensor_data.status, sizeof(uint32_t), SUTSIM_UINT32);
+    sutsim_add_tag(TEMPERATURE_CELSIUS_TAG, &sensor_data.temperature, sizeof(float), SUTSIM_FLOAT, NULL, false);
+    sutsim_add_tag(TEMPERATURE_STATUS_TAG, &sensor_data.status, sizeof(uint32_t), SUTSIM_UINT32, NULL, false);
     return TEMPERATURE_SENSOR_SUCCESS;
 }
 

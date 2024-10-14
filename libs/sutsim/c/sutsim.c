@@ -24,11 +24,14 @@ void sutsim_init(void) {
 }
 
 void sutsim_tick(void) {
-    // TODO: Check that the simulator is initialized
+    if (!tag_list.initialized) {
+        return;  // Not initialized
+    }
+
     sut_tick_hook();
 }
 
-bool sutsim_add_tag(const char* tag, void* data, uint32_t size, sutsim_dataType_E type) {
+bool sutsim_add_tag(const char* tag, void* data, uint32_t size , sutsim_dataType_E type, sutsim_TagCallback subscriber_cb, bool is_persistent) {
     if (sutsim_find_tag(tag)) {
         return false;  // Tag already exists
     }
@@ -38,13 +41,13 @@ bool sutsim_add_tag(const char* tag, void* data, uint32_t size, sutsim_dataType_
         return false;  // Memory allocation failure
     }
 
-    new_entry->id            = tag_list.count;
-    new_entry->tag           = tag;
-    new_entry->data          = data;  // Directly use the user-provided buffer
-    new_entry->size          = size;
-    new_entry->type          = type;
-    new_entry->subscriber_cb = NULL;
-    new_entry->next          = NULL;
+    new_entry->tag = tag;
+    new_entry->data = data;
+    new_entry->data_size = size;
+    new_entry->data_type = type;
+    new_entry->subscriber_cb = subscriber_cb;
+    new_entry->is_persistent = is_persistent;
+    new_entry->next = NULL;
 
     if (tag_list.head == NULL) {
         tag_list.head = new_entry;
@@ -74,11 +77,13 @@ bool sutsim_write(const char* tag, const void* data, uint32_t size) {
     sutsim_tagEntry_S* tagEntry = sutsim_find_tag(tag);
 
     if (tagEntry) {
-        if (size != tagEntry->size) {
+        if (size != tagEntry->data_size) {
             return false;  // Size mismatch
         }
-
-        memcpy(tagEntry->data, data, size);
+        
+        if (tagEntry->data) {
+            memcpy(tagEntry->data, data, size);
+        }
 
         if (tagEntry->subscriber_cb) {
             tagEntry->subscriber_cb(tag, data, size);
@@ -94,7 +99,7 @@ bool sutsim_read(const char* tag, void* buffer, uint32_t size) {
     sutsim_tagEntry_S* tagEntry = sutsim_find_tag(tag);
 
     if (tagEntry) {
-        if (size != tagEntry->size) {
+        if (size != tagEntry->data_size) {
             return false;  // Size mismatch
         }
 
@@ -105,23 +110,10 @@ bool sutsim_read(const char* tag, void* buffer, uint32_t size) {
     return false;  // Tag not found
 }
 
-void sutsim_cleanup(void) {
-    sutsim_tagEntry_S* current = tag_list.head;
-    while (current != NULL) {
-        sutsim_tagEntry_S* next = current->next;
-        free(current->data);
-        free(current);
-        current = next;
-    }
-    tag_list.head = NULL;
-    tag_list.tail = NULL;
-    tag_list.count = 0;
-}
-
 int8_t sutsim_get_tag_type(const char* tag) {
     sutsim_tagEntry_S* tagEntry = sutsim_find_tag(tag);
     if (tagEntry) {
-        return (int8_t)tagEntry->type;
+        return (int8_t)tagEntry->data_type;
     }
 
     return -1;  // Tag not found
