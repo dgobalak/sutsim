@@ -2,11 +2,6 @@
 
 set(SOURCES
     sutsim_hooks.c
-    app_task_config.c
-    app_temperature.c
-    temperature_sensor.c
-    pwm.c
-    heater.c
 )
 
 set(INCLUDE_DIRS
@@ -18,8 +13,6 @@ target_include_directories(firmware PRIVATE ${INCLUDE_DIRS})
 
 target_link_libraries(firmware
     -Wl,--whole-archive sutsim -Wl,--no-whole-archive
-    freertos_with_port
-    task_config
 )
 
 # Set output directory for firmware shared libraries

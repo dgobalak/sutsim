@@ -39,21 +39,25 @@ jobs:
           sudo apt-get update
           sudo apt-get install cmake gcc g++ python3-dev -y
 
-      # Configure the project
-      - name: Configure project with CMake
+      # Find all example directories and build them dynamically
+      - name: Build and test all examples
         run: |
-          mkdir examples/basic_heater/build
-          cd examples/basic_heater/build
-          cmake ..
+          EXAMPLES_DIR="examples"
+          for example in $(find "$EXAMPLES_DIR" -maxdepth 1 -type d | tail -n +2); do
+            echo "Processing $example..."
 
-      # Build the project
-      - name: Build the project
-        run: |
-          cd examples/basic_heater/build
-          make
+            # Create build directory and configure the project
+            mkdir -p "$example/build"
+            cd "$example/build"
+            cmake ..
+            
+            # Build the project
+            make
 
-      # Run the tests
-      - name: Run simulation tests
-        run: |
-          cd examples/basic_heater/test
-          sh run_tests.sh
+            echo "Running tests for $example..."
+            cd "$example/test"
+            sh run_tests.sh
+
+            # Return to root directory for the next example
+            cd ../../../
+          done
