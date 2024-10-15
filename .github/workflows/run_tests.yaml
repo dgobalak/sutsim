@@ -3,14 +3,19 @@ name: Run Simulation Tests
 on:
   push:
     branches:
-      - '*'        # Trigger on push to any branch
+      - '*'
   pull_request:
     branches:
-      - '*'        # Trigger on pull request to any branch
+      - '*'
 
 jobs:
   sil:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        example:
+          - basic_heater
+          - basic_baremetal
 
     steps:
       # Checkout the code with submodules
@@ -39,25 +44,21 @@ jobs:
           sudo apt-get update
           sudo apt-get install cmake gcc g++ python3-dev -y
 
-      # Find all example directories and build them dynamically
-      - name: Build and test all examples
+      # Configure the project
+      - name: Configure project with CMake
         run: |
-          EXAMPLES_DIR="examples"
-          for example in $(find "$EXAMPLES_DIR" -maxdepth 1 -type d | tail -n +2); do
-            echo "Processing $example..."
+          mkdir -p examples/${{ matrix.example }}/build
+          cd examples/${{ matrix.example }}/build
+          cmake ..
 
-            # Create build directory and configure the project
-            mkdir -p "$example/build"
-            cd "$example/build"
-            cmake ..
-            
-            # Build the project
-            make
+      # Build the project
+      - name: Build the project
+        run: |
+          cd examples/${{ matrix.example }}/build
+          make
 
-            echo "Running tests for $example..."
-            cd "$example/test"
-            sh run_tests.sh
-
-            # Return to root directory for the next example
-            cd ../../../
-          done
+      # Run the tests
+      - name: Run simulation tests
+        run: |
+          cd examples/${{ matrix.example }}/test
+          sh run_tests.sh
