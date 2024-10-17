@@ -22,6 +22,8 @@ target_link_libraries(firmware
     task_config
 )
 
+set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--no-undefined")
+
 # Set output directory for firmware shared libraries
 set_target_properties(firmware PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY ${SUTSIM_TEST_DIR}/sim_artifacts
