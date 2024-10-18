@@ -1,104 +1,12 @@
 
 # SUTSim
 
-SUTSim is a simulation environment for firmware that integrates well with Python tests. It allows you to execute firmware (without hardware), inject sensor data, and validate outputs (bus data, PWM signals, etc).
+SUTSim is a simulation framework for validating baremetal or RTOS-based firmware off-target. Here are the main features:
+- Supports signal injection at any layer of the firmware, eliminating hardware dependencies (sensors, data storage, etc.)
+- Supports signal monitoring at any layer of the firmware, allowing users to monitor what the firmware is doing at any given timestep
+- Supports a Python abstraction for writing automated regression tests that validate system-level behaviour
 
-## Project Structure
-
-The directory structure of the project is as follows:
-
-```
-/examples
-    /src
-    /test
-        /sim_artifacts
-        run_tests.sh
-        test_temperature_sensor.py
-/libs
-    /freertos
-    /sutsim
-/sim
-    /core
-    /py
-```
-
-## Setup Instructions
-
-### 1. Cloning the Repository
-
-This project uses git submodules to manage dependencies. To clone the repository with all submodules, use the following commands:
-
-```bash
-git clone --recurse-submodules <repository-url>
-cd <repository-folder>
-```
-
-If you already cloned the repo without the submodules, you can initialize them manually with:
-
-```bash
-git submodule update --init --recursive
-```
-
-### 2. Building the Project
-
-The project uses CMake for its build process. Make sure you have CMake installed on your system.
-
-```bash
-mkdir build
-cd build
-cmake ..
-make
-```
-
-### 3. Running the Tests
-
-The tests are located in the `/test` directory. Use the following commands to execute the tests using `pytest`:
-
-```bash
-cd test
-./run_tests.sh
-```
-
-This script sets up the environment variables needed for the tests and runs them using `pytest`. It ensures that the shared libraries are correctly loaded and the Python bindings are configured.
-
-## Test Syntax
-
-Here's an example test case:
-
-```python
-import pytest
-
-def test_temperature_sensor_reads(devices):    
-    devices["thermal_ecu"]["temperature_sensor.status"] = 1
-    assert devices["thermal_ecu"]["temperature_sensor.status"] == 1
-    
-    devices["thermal_ecu"]["temperature_sensor.temperature"] = 100.0
-    assert devices["thermal_ecu"]["temperature_sensor.temperature"] == 100.0
-    
-    devices.run_for(25)
-    
-```
-
-## Debugging with GDB
-
-To debug the tests or the firmware simulation with GDB, follow these steps:
-
-1. Build the project:
-
-   ```bash
-   cd build
-   cmake ..
-   make
-   ```
-
-2. Run GDB with the Python test process:
-
-   ```bash
-   cd test
-   CMD_WRAPPER="gdb --args" run_tests.sh
-   ```
-
-3. Set breakpoints and use GDB commands to debug the simulation and interactions.
+Take a look at the examples in the repo for more info on the framework's capabilities.
 
 ## License
 
