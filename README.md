@@ -8,6 +8,13 @@ SUTSim is a simulation framework for validating baremetal or RTOS-based firmware
 
 Take a look at the examples in the repo for more info on the framework's capabilities.
 
+## Getting Started
+### SUTSim Development
+See our [dev environment setup instructions](https://github.com/dgobalak/sutsim/blob/main/docs/dev_setup.md).
+
+### Integrating into new project
+See our [project integration guide](https://github.com/dgobalak/sutsim/blob/main/docs/new_project.md) for a general overview of how you can integrate sutsim into an existing firmware codebase.
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
