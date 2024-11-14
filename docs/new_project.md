@@ -1,4 +1,4 @@
-# Integrating SUTSim with new project
+# Integrating sutsim into new project
 So how do you integrate sutsim into an existing firmware codebase?
 
 To help explain, I'll walk through the [basic_baremetal](https://github.com/dgobalak/sutsim/tree/main/examples/basic_baremetal) example since it's an example of the simplest possible sutsim integration.
@@ -35,6 +35,8 @@ This CMake script configures some important parameters:
 ### Firmware CMakeLists.txt
 Each firmware variant you want to simulate must have its own CMakeLists.txt that manages the shared object build. By compiling each firmware variant as a shared object, we can dynamically link it to the sutsim simulator. The script below shows a basic build for the example firmware. It defines all the files to be compiled, links the required sutsim C layer (note the use of the --whole-archive linker flag), and configures the build artifact directory (It's easier to manage if the shared object of every variant is stored in the same directory). 
 
+We're compiling the firmware as a shared lib. This also means you won't get compiler errors (by default on GCC) for undefined functions. Since the firmware typically won't have dependencies that are linked at runtime, enabling the --no-undefined linker flag is recommended.   
+
 ```cmake
 set(SOURCES
     sutsim_hooks.c
@@ -60,7 +62,7 @@ set_target_properties(firmware PROPERTIES
 ```
 
 ### Required Hooks
-The hooks that you're required to implement are sut_init_hook and sut_tick_hook. After the sutsim simulator loads a shared object, it uses these hooks to simulate the firmware running. At the beginning of the simulation, sut_init_hook is executed. Whenever you tick the simulation in a test, the sut_tick_hook is executed. Look at the [basic_heater example](https://github.com/dgobalak/sutsim/tree/main/examples/basic_heater) for more ideas on how to use these hooks.
+The hooks that you're required to implement are sut_init_hook and sut_tick_hook. After the sutsim simulator loads a shared object, it uses these hooks to simulate the firmware running. At the beginning of the simulation, sut_init_hook is executed. Whenever you tick the simulation in a test, the sut_tick_hook is executed. Look at the [basic_heater example](https://github.com/dgobalak/sutsim/tree/main/examples/basic_heater) for more ideas on how to use these hooks. These hooks should call the firmware code that you want to simulate.
 ```c
 void sut_init_hook(void) {
   ...
@@ -73,7 +75,7 @@ void sut_tick_hook(void) {
 
 ## test/
 ### Configuring Tests
-Typically, you should define a conftest.py file in your test directory. The sutsim Python framework expects the device_map fixture to be defined by the user. It needs to return a mapping from device/SUT names to their shared object path.
+Typically, you should define a conftest.py file in your test directory. The sutsim Python framework expects the device_map fixture to be defined by the user. It needs to return a mapping from device names to their shared object path.
 ```python
 from sutsim_fixtures import devices
 import pytest
